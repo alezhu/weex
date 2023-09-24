@@ -1,6 +1,6 @@
 {
   "name": "weex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "npm package for getting week info",
   "main": "dist/index.js",
   "files": [
