@@ -1,5 +1,5 @@
 {
-  "name": "weex",
+  "name": "@alezhu/weex",
   "version": "1.0.1",
   "description": "npm package for getting week info",
   "main": "dist/index.js",
