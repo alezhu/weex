@@ -90,52 +90,57 @@ export class Week {
 
     }
 
-    public static from(week: string | Date): Week {
+    public static from(week: number | string | Date): Week {
         if (week instanceof Date) {
             const weekInfo = Week.getWeekNumber(week);
             return new Week(weekInfo.week, weekInfo.year);
         } else {
-            week = week.trim();
             let iWeek = 0;
             let year = 0;
             const toInt = (value: any): number => {
-                return Number.isInteger(value) ? value : (typeof value === 'string') ? Number.parseInt(value, 10) : (typeof value === 'undefined') ? 0 : value;
+                return (typeof value === 'string') ? Number.parseInt(value, 10) : (typeof value === 'undefined') ? 0 : value;
             }
-
-            if (week.length <= 2) {
+            if (Number.isInteger(week)) {
                 iWeek = toInt(week);
                 year = new Date().getFullYear();
             } else {
-                let aWeek = week.match(/^(\d{1,4})\D+(\d{1,4})$/);
-                if (aWeek && aWeek.length == 3) {
-                    if (aWeek[1].length === 4) {
-                        iWeek = toInt(aWeek[2]);
-                        year = toInt(aWeek[1]);
-                    } else {
-                        iWeek = toInt(aWeek[1]);
-                        year = toInt(aWeek[2]);
+                week = (<string>week).trim();
+                if (week.length <= 2) {
+                    iWeek = toInt(week);
+                    year = new Date().getFullYear();
+                } else {
+                    let aWeek = week.match(/^(\d{1,4})\D+(\d{1,4})$/);
+                    if (aWeek && aWeek.length == 3) {
+                        if (aWeek[1].length === 4) {
+                            iWeek = toInt(aWeek[2]);
+                            year = toInt(aWeek[1]);
+                        } else {
+                            iWeek = toInt(aWeek[1]);
+                            year = toInt(aWeek[2]);
+                        }
                     }
                 }
+
             }
             return new Week(iWeek, year);
         }
     }
 
-    public static prev(value: string | Date | Week): Week  {
+    public static prev(value: number|string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.prev();
     }
 
-    public static next(value: string | Date | Week): Week  {
+    public static next(value: number|string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.next();
     }
 
-    public prev(): Week  {
+    public prev(): Week {
         return Week.from(new Date(+this.FirstDate - Week.MS_IN_WEEK));
     }
 
-    public next(): Week  {
+    public next(): Week {
         return Week.from(new Date(+this.FirstDate + Week.MS_IN_WEEK));
     }
 

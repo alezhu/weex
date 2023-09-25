@@ -46,6 +46,16 @@ describe('Week', () => {
             expect(result.value).toBe(22);
 
         });
+
+        it('should create from int with week number', function () {
+            const now = new Date();
+            const result = Week.from(22);
+            expect(result).toBeDefined();
+            expect(result).toBeInstanceOf(Week);
+            expect(result.year).toBe(now.getFullYear());
+            expect(result.value).toBe(22);
+        });
+
         it('should create from string with week and year separated by -', function () {
             const result = Week.from('22-2019');
             expect(result).toBeDefined();
