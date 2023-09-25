@@ -1,6 +1,6 @@
 {
   "name": "@alezhu/weex",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "npm package for getting week info",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/types/index.d.ts",
