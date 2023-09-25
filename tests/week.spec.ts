@@ -1,4 +1,4 @@
-import {Week, WeekInfo} from "./week";
+import {Week, WeekInfo} from "../src";
 
 describe('Week', () => {
     const weekDiff = Date.UTC(2020, 0, 8) - Date.UTC(2020, 0, 1);
