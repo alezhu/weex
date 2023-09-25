@@ -1,3 +1,2 @@
-import { Week, WeekInfo} from "./week";
+export *  from "./week";
 
-export { Week , WeekInfo};
