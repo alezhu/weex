@@ -1,5 +1,3 @@
-import assert from "assert";
-
 export interface WeekInfo {
     week: number,
     year: number,
@@ -13,8 +11,8 @@ export class Week {
     private _lastDate: Date | null | undefined = null;
 
     public constructor(value: number, year?: number) {
-        assert(value > 0, "Week number must be grow 0");
-        assert(value <= 53, "Week number must be less or equal 53");
+        if (!(value > 0)) throw new Error("Week number must be grow 0");
+        if (value > 53) throw new Error("Week number must be less or equal 53");
         this.value = value;
         this.year = year || new Date().getFullYear();
     }
@@ -126,12 +124,12 @@ export class Week {
         }
     }
 
-    public static prev(value: number|string | Date | Week): Week {
+    public static prev(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.prev();
     }
 
-    public static next(value: number|string | Date | Week): Week {
+    public static next(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.next();
     }
