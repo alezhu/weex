@@ -23,8 +23,9 @@
   },
   "scripts": {
     "clean": "del-cli ./dist",
-    "test": "jest",
-    "test:ci": "jest --coverage",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ci": "vitest --coverage",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p ./tsconfig.esm.json && copyfiles --flat src/wrapper.mjs dist/esm && echo {\"type\": \"module\"} > dist/esm/package.json",
     "build:cjs": "tsc -p ./tsconfig.cjs.json && echo {\"type\": \"commonjs\"} > dist/cjs/package.json",
@@ -52,12 +53,12 @@
   },
   "homepage": "https://github.com/alezhu/weex#readme",
   "devDependencies": {
-    "@types/jest": "^29.5.5",
-    "del-cli": "^5.1.0",
-    "move-file-cli": "^3.0.0",
+    "@vitest/coverage-v8": "4.1.6",
+    "@vitest/expect": "^4.1.6",
     "copyfiles": "^2.4.1",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "del-cli": "^7.0.0",
+    "move-file-cli": "^3.0.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.6"
   }
 }
