@@ -1,16 +1,32 @@
+/**
+ * Interface representing week information.
+ */
 export interface WeekInfo {
-    week: number,
-    year: number,
+    /** Week number (1-53) */
+    week: number;
+    /** Year */
+    year: number;
 }
 
+/**
+ * Class representing a week number in a specific year.
+ */
 export class Week {
+    /** Number of milliseconds in a week */
     public static readonly MS_IN_WEEK = 7 * 60 * 60 * 24 * 1000;
+
+    /** Week number (1-53) */
     public readonly value: number;
+
+    /** Year */
     public readonly year: number;
 
+    /** Cached first date of the week */
     private _firstDate: Date | null = null;
 
+    /** Cached last date of the week */
     private _lastDate: Date | null = null;
+
     public constructor(value: number, year?: number) {
         if (!(value > 0)) throw new Error("Week number must be greater than 0");
         if (value > 53) throw new Error("Week number must be less or equal 53");
@@ -18,6 +34,9 @@ export class Week {
         this.year = year || new Date().getFullYear();
     }
 
+    /**
+     * Gets the first date of this week (Sunday).
+     */
     public get FirstDate(): Date {
         if (!this._firstDate) {
             this._firstDate = Week.getWeekStartDate(this.value, this.year);
@@ -25,6 +44,9 @@ export class Week {
         return this._firstDate;
     }
 
+    /**
+     * Gets the last date of this week (Saturday) at 23:59:59.999.
+     */
     public get LastDate(): Date {
         if (!this._lastDate) {
             this._lastDate = new Date(+this.FirstDate);
@@ -50,6 +72,11 @@ export class Week {
      * e.g. 2014/12/29 is Monday in week  1 of 2015
      *      2012/1/1   is Sunday in week 52 of 2011
      */
+    /**
+     * Gets the ISO week number for a given date.
+     * @param dDate - The date to get week number for
+     * @returns WeekInfo object containing week number and year
+     */
     public static getWeekNumber(dDate: Date): WeekInfo {
         // Copy date so don't modify original
         const d = new Date(+dDate);
@@ -66,7 +93,12 @@ export class Week {
     }
 
 
-
+    /**
+     * Gets the start date (Sunday) of a specific week in a year.
+     * @param weekOrWeekInfo - WeekInfo object or week number
+     * @param year - Year (optional if providing WeekInfo)
+     * @returns Date object representing the Sunday at the start of the week
+     */
     public static getWeekStartDate(weekOrWeekInfo: WeekInfo | number, year?: number): Date {
         let week: number;
         let yearNum: number;
@@ -142,24 +174,46 @@ export class Week {
         return new Week(weekNum, yearNum);
     }
 
+    /**
+     * Creates a Week object representing the previous week.
+     * @param value - Week number, date string, Date object, or Week object
+     * @returns Week object for the previous week
+     */
     public static prev(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.prev();
     }
 
+    /**
+     * Creates a Week object representing the next week.
+     * @param value - Week number, date string, Date object, or Week object
+     * @returns Week object for the next week
+     */
     public static next(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.next();
     }
 
+    /**
+     * Gets the previous week.
+     * @returns Week object for the week before this one
+     */
     public prev(): Week {
         return Week.from(new Date(+this.FirstDate - Week.MS_IN_WEEK));
     }
 
+    /**
+     * Gets the next week.
+     * @returns Week object for the week after this one
+     */
     public next(): Week {
         return Week.from(new Date(+this.FirstDate + Week.MS_IN_WEEK));
     }
 
+    /**
+     * Returns the string representation of the week in "YYYY.WW" format.
+     * @returns String in format "YYYY.WW" (e.g., "2024.05")
+     */
     public toString() {
         return `${this.year.toString().padStart(4, '0')}.${this.value.toString().padStart(2, '0')}`;
     }
