@@ -7,9 +7,10 @@ export class Week {
     public static readonly MS_IN_WEEK = 7 * 60 * 60 * 24 * 1000;
     public readonly value: number;
     public readonly year: number;
-    private _firstDate: Date | null | undefined = null;
-    private _lastDate: Date | null | undefined = null;
 
+    private _firstDate: Date | null = null;
+
+    private _lastDate: Date | null = null;
     public constructor(value: number, year?: number) {
         if (!(value > 0)) throw new Error("Week number must be grow 0");
         if (value > 53) throw new Error("Week number must be less or equal 53");
@@ -64,22 +65,25 @@ export class Week {
         return {week: weekNo, year: yearStart.getFullYear()};
     }
 
-    public static getWeekStartDate(weekInfo: WeekInfo): Date;
 
-    public static getWeekStartDate(week: number, year: number): Date;
 
-    public static getWeekStartDate(weekOrWeekInfo: unknown, year?: number): Date {
+    public static getWeekStartDate(weekOrWeekInfo: WeekInfo | number, year?: number): Date {
         let week: number;
-        if ((Number.isInteger(weekOrWeekInfo) && Number.isInteger(year))) {
-            week = weekOrWeekInfo as number;
+        let yearNum: number;
+        if (typeof weekOrWeekInfo === 'number' && typeof year === 'number') {
+            week = weekOrWeekInfo;
+            yearNum = year;
+        } else if (typeof weekOrWeekInfo === 'object' && weekOrWeekInfo !== null && 'week' in weekOrWeekInfo && 'year' in weekOrWeekInfo) {
+            week = weekOrWeekInfo.week;
+            yearNum = weekOrWeekInfo.year;
         } else {
-            ({week, year} = weekOrWeekInfo as WeekInfo);
+            throw new Error('Invalid arguments: must provide either WeekInfo object or week number and year');
         }
-        const date = new Date(<number>year, 0, 1);
+        const date = new Date(yearNum, 0, 1);
         const dayNum = date.getDay() || 7;
         let dayDelta = (week - 1) * 7;
         // If 1 Jan is Friday to Sunday, go to next week
-        if ((dayNum > 4)) {
+        if (dayNum > 4) {
             dayDelta += 7;
         }
         // Add required number of days
@@ -92,36 +96,50 @@ export class Week {
         if (week instanceof Date) {
             const weekInfo = Week.getWeekNumber(week);
             return new Week(weekInfo.week, weekInfo.year);
-        } else {
-            let iWeek = 0;
-            let year = 0;
-            const toInt = (value: any): number => {
-                return (typeof value === 'string') ? Number.parseInt(value, 10) : (typeof value === 'undefined') ? 0 : value;
-            }
-            if (Number.isInteger(week)) {
-                iWeek = toInt(week);
-                year = new Date().getFullYear();
-            } else {
-                week = (<string>week).trim();
-                if (week.length <= 2) {
-                    iWeek = toInt(week);
-                    year = new Date().getFullYear();
-                } else {
-                    let aWeek = week.match(/^(\d{1,4})\D+(\d{1,4})$/);
-                    if (aWeek && aWeek.length == 3) {
-                        if (aWeek[1].length === 4) {
-                            iWeek = toInt(aWeek[2]);
-                            year = toInt(aWeek[1]);
-                        } else {
-                            iWeek = toInt(aWeek[1]);
-                            year = toInt(aWeek[2]);
-                        }
-                    }
-                }
-
-            }
-            return new Week(iWeek, year);
         }
+
+        let weekNum: number;
+        let yearNum: number = new Date().getFullYear();
+
+        if (typeof week === 'number') {
+            weekNum = week;
+        } else if (typeof week === 'string') {
+            const trimmed = week.trim();
+
+            // Try to parse as just week number (e.g., "5")
+            if (trimmed.length <= 2 && /^\d{1,2}$/.test(trimmed)) {
+                weekNum = parseInt(trimmed, 10);
+            } else {
+                // Try to parse as "week year" or "year week" format
+                const parts = trimmed.split(/\D+/);
+                if (parts.length >= 2) {
+                    const num1 = parseInt(parts[0], 10);
+                    const num2 = parseInt(parts[1], 10);
+
+                    if (parts[0].length === 4 && num1 >= 1000 && num1 <= 9999) {
+                        // Format: "2024 12" or "2024-12" (year week)
+                        yearNum = num1;
+                        weekNum = num2;
+                    } else if (parts[1].length === 4 && num2 >= 1000 && num2 <= 9999) {
+                        // Format: "12 2024" or "12-2024" (week year)
+                        weekNum = num1;
+                        yearNum = num2;
+                    } else {
+                        // Both are likely week numbers, use current year
+                        weekNum = num1;
+                    }
+                } else if (parts.length === 1) {
+                    // Single number, treat as week number
+                    weekNum = parseInt(parts[0], 10);
+                } else {
+                    throw new Error(`Invalid week format: ${week}`);
+                }
+            }
+        } else {
+            throw new Error(`Invalid week type: ${typeof week}`);
+        }
+
+        return new Week(weekNum, yearNum);
     }
 
     public static prev(value: number | string | Date | Week): Week {
