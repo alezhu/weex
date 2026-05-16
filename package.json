@@ -30,7 +30,7 @@
     "build:esm": "tsc -p ./tsconfig.esm.json && copyfiles --flat src/wrapper.mjs dist/esm && echo {\"type\": \"module\"} > dist/esm/package.json",
     "build:cjs": "tsc -p ./tsconfig.cjs.json && echo {\"type\": \"commonjs\"} > dist/cjs/package.json",
     "prepublishOnly": "npm run build",
-    "npmjs:deploy": "npm publish --access public",
+    "npmjs:deploy": "npm config set //registry.npmjs.org/:_authToken=<token> && npm publish --access public",
     "version:patch": "npm version patch"
   },
   "publishConfig": {
