@@ -12,7 +12,7 @@ export class Week {
 
     private _lastDate: Date | null = null;
     public constructor(value: number, year?: number) {
-        if (!(value > 0)) throw new Error("Week number must be grow 0");
+        if (!(value > 0)) throw new Error("Week number must be greater than 0");
         if (value > 53) throw new Error("Week number must be less or equal 53");
         this.value = value;
         this.year = year || new Date().getFullYear();

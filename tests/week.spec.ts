@@ -18,7 +18,7 @@ describe('Week', () => {
     it('should throw Error for week less 1', function () {
         expect(() => {
             new Week(0)
-        }).toThrow('Week number must be grow 0');
+        }).toThrow('Week number must be greater than 0');
     });
 
     it('should throw Error for week grow 53', function () {
@@ -87,7 +87,7 @@ describe('Week', () => {
         });
 
         it('should return null for invalid argument', function () {
-            expect(() => Week.from('W22.2019')).toThrow('Week number must be grow 0');
+            expect(() => Week.from('W22.2019')).toThrow('Week number must be greater than 0');
         });
     })
 
@@ -134,7 +134,7 @@ describe('Week', () => {
         });
 
         it('should throw exception for invalid argument', function () {
-            expect(() => Week.prev('W22.2019')).toThrow("Week number must be grow 0");
+            expect(() => Week.prev('W22.2019')).toThrow("Week number must be greater than 0");
         });
     })
 
@@ -181,7 +181,7 @@ describe('Week', () => {
         });
 
         it('should throw exception for invalid argument', function () {
-            expect(() => Week.next('0.2019')).toThrow('Week number must be grow 0');
+            expect(() => Week.next('0.2019')).toThrow('Week number must be greater than 0');
         });
 
     })
