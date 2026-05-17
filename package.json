@@ -31,7 +31,9 @@
     "build:cjs": "tsc -p ./tsconfig.cjs.json && echo {\"type\": \"commonjs\"} > dist/cjs/package.json",
     "prepublishOnly": "npm run build",
     "npmjs:deploy": "npm config set //registry.npmjs.org/:_authToken=<token> && npm publish --access public",
-    "version:patch": "npm version patch"
+    "version:patch": "npm version patch",
+    "prepare": "husky || true",
+    "commitmsg": "commitlint --edit"
   },
   "publishConfig": {
     "access": "public"
@@ -53,10 +55,13 @@
   },
   "homepage": "https://github.com/alezhu/weex#readme",
   "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
     "@vitest/coverage-v8": "4.1.6",
     "@vitest/expect": "^4.1.6",
     "copyfiles": "^2.4.1",
     "del-cli": "^7.0.0",
+    "husky": "^9.1.7",
     "move-file-cli": "^3.0.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.6"
