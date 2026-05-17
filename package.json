@@ -55,8 +55,8 @@
   },
   "homepage": "https://github.com/alezhu/weex#readme",
   "devDependencies": {
-    "@commitlint/cli": "^21.0.1",
-    "@commitlint/config-conventional": "^17.8.1",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^21.0.1",
     "@vitest/coverage-v8": "4.1.6",
     "@vitest/expect": "^4.1.6",
     "copyfiles": "^2.4.1",
