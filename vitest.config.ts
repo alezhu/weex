@@ -2,7 +2,10 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
     test: {
-        globals: true, // Позволяет использовать expect, describe без импорта
-        environment: 'node', // или 'jsdom' для фронтенда
+        globals: true,
+        environment: 'node',
+        coverage: {
+            include: ['src/week.ts'],
+        },
     },
 })

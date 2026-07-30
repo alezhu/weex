@@ -157,10 +157,6 @@ export class Week {
                     throw new Error(`Invalid week format: ${week}`);
                 }
             }
-
-            if (isNaN(weekNum) || isNaN(yearNum)) {
-                throw new Error(`Invalid week format: ${week}`);
-            }
         } else {
             throw new Error(`Invalid week type: ${typeof week}`);
         }

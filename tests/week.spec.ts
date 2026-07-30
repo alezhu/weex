@@ -427,4 +427,35 @@ describe('Week', () => {
             expect(Week.getWeeksInYear(2024)).toBe(52);
         });
     });
+
+    describe('coverage edge cases', () => {
+        it('getWeekStartDate should throw for invalid argument', () => {
+            expect(() => Week.getWeekStartDate('invalid' as any)).toThrow(
+                'Invalid arguments: must provide either WeekInfo object, Week instance, or week number and year'
+            );
+        });
+
+        it('Week.from should handle two non-year numbers and single long string', () => {
+            const res1 = Week.from('12.34');
+            expect(res1.value).toBe(12);
+            expect(res1.year).toBe(new Date().getFullYear());
+
+            const res2 = Week.from('W005');
+            expect(res2.value).toBe(5);
+            expect(res2.year).toBe(new Date().getFullYear());
+        });
+
+        it('Week.from should throw for plain object input', () => {
+            expect(() => Week.from({} as any)).toThrow('Invalid week type: object');
+        });
+
+        it('Week.next and Week.prev should accept Week instance directly', () => {
+            const week = new Week(10, 2024);
+            const nextWeek = Week.next(week);
+            const prevWeek = Week.prev(week);
+
+            expect(nextWeek.value).toBe(11);
+            expect(prevWeek.value).toBe(9);
+        });
+    });
 })
