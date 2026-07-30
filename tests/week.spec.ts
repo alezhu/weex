@@ -327,4 +327,104 @@ describe('Week', () => {
             expect(result).toBe('2020.10')
         });
     });
+
+    describe('camelCase getters', () => {
+        it('firstDate should match FirstDate', () => {
+            const week = new Week(5, 2024);
+            expect(week.firstDate).toStrictEqual(week.FirstDate);
+        });
+
+        it('lastDate should match LastDate', () => {
+            const week = new Week(5, 2024);
+            expect(week.lastDate).toStrictEqual(week.LastDate);
+        });
+    });
+
+    describe('comparison methods', () => {
+        it('compareTo should return correct sign', () => {
+            const w1 = new Week(10, 2023);
+            const w2 = new Week(12, 2023);
+            const w3 = new Week(5, 2024);
+
+            expect(w1.compareTo(w2)).toBeLessThan(0);
+            expect(w2.compareTo(w1)).toBeGreaterThan(0);
+            expect(w1.compareTo(w1)).toBe(0);
+            expect(w1.compareTo(w3)).toBeLessThan(0);
+        });
+
+        it('equals should compare correctly', () => {
+            const w1 = new Week(10, 2023);
+            const w2 = new Week(10, 2023);
+            const w3 = new Week(11, 2023);
+
+            expect(w1.equals(w2)).toBe(true);
+            expect(w1.equals(w3)).toBe(false);
+            expect(w1.equals(null as any)).toBe(false);
+        });
+
+        it('isBefore and isAfter should return boolean', () => {
+            const w1 = new Week(10, 2023);
+            const w2 = new Week(15, 2023);
+
+            expect(w1.isBefore(w2)).toBe(true);
+            expect(w2.isBefore(w1)).toBe(false);
+            expect(w2.isAfter(w1)).toBe(true);
+            expect(w1.isAfter(w2)).toBe(false);
+        });
+    });
+
+    describe('contains', () => {
+        it('should return true for date inside week and false for outside', () => {
+            const week = new Week(1, 2024); // Mon Jan 01 2024 to Sun Jan 07 2024
+            const inside = new Date(2024, 0, 3, 12, 0, 0);
+            const before = new Date(2023, 11, 31, 23, 59, 59);
+            const after = new Date(2024, 0, 8, 0, 0, 0);
+
+            expect(week.contains(inside)).toBe(true);
+            expect(week.contains(before)).toBe(false);
+            expect(week.contains(after)).toBe(false);
+        });
+    });
+
+    describe('getDays and toDateRange', () => {
+        it('getDays should return 7 consecutive dates from Monday to Sunday', () => {
+            const week = new Week(1, 2024);
+            const days = week.getDays();
+
+            expect(days).toHaveLength(7);
+            expect(days[0]).toStrictEqual(week.firstDate);
+            expect(days[6].getDate()).toBe(7);
+        });
+
+        it('toDateRange should return start and end Date', () => {
+            const week = new Week(1, 2024);
+            const range = week.toDateRange();
+
+            expect(range.start).toStrictEqual(week.firstDate);
+            expect(range.end).toStrictEqual(week.lastDate);
+        });
+    });
+
+    describe('toISOString', () => {
+        it('should return string in YYYY-Www format', () => {
+            const week = new Week(5, 2024);
+            expect(week.toISOString()).toBe('2024-W05');
+        });
+    });
+
+    describe('static helpers: current, now, getWeeksInYear', () => {
+        it('current and now should return Week instance for current date', () => {
+            const curr = Week.current();
+            const n = Week.now();
+            expect(curr).toBeInstanceOf(Week);
+            expect(n).toBeInstanceOf(Week);
+            expect(curr.equals(n)).toBe(true);
+        });
+
+        it('getWeeksInYear should return 52 or 53', () => {
+            expect(Week.getWeeksInYear(2020)).toBe(53);
+            expect(Week.getWeeksInYear(2023)).toBe(52);
+            expect(Week.getWeeksInYear(2024)).toBe(52);
+        });
+    });
 })
