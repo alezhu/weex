@@ -37,6 +37,13 @@ export class Week {
     /**
      * Gets the first date of this week (Monday).
      */
+    public get firstDate(): Date {
+        return this.FirstDate;
+    }
+
+    /**
+     * Gets the first date of this week (Monday).
+     */
     public get FirstDate(): Date {
         if (!this._firstDate) {
             this._firstDate = Week.getWeekStartDate(this.value, this.year);
@@ -158,6 +165,13 @@ export class Week {
         // Add required number of days
         date.setDate(1 - dayNum + (dayDelta + 1));
         return date;
+    }
+
+    /**
+     * Gets the last date of this week (Sunday) at 23:59:59.999.
+     */
+    public get lastDate(): Date {
+        return this.LastDate;
     }
 
     /**
