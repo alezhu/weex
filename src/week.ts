@@ -45,88 +45,10 @@ export class Week {
     }
 
     /**
-     * Gets the last date of this week (Sunday) at 23:59:59.999.
+     * Creates a Week object from various input types.
+     * @param week - Week number, date string, Date object, or Week object
+     * @returns Week instance
      */
-    public get LastDate(): Date {
-        if (!this._lastDate) {
-            this._lastDate = new Date(+this.FirstDate);
-            this._lastDate.setDate(this._lastDate.getDate() + 6);
-            this._lastDate.setHours(23, 59, 59, 999);
-        }
-        return this._lastDate;
-    }
-
-    /* For a given date, get the ISO week number
-     *
-     * Based on information at:
-     *
-     *    http://www.merlyn.demon.co.uk/weekcalc.htm#WNR
-     *
-     * Algorithm is to find nearest thursday, it's year
-     * is the year of the week number. Then get weeks
-     * between that date and the first day of that year.
-     *
-     * Note that dates in one year can be weeks of previous
-     * or next year, overlap is up to 3 days.
-     *
-     * e.g. 2014/12/29 is Monday in week  1 of 2015
-     *      2012/1/1   is Sunday in week 52 of 2011
-     */
-    /**
-     * Gets the ISO week number for a given date.
-     * @param dDate - The date to get week number for
-     * @returns WeekInfo object containing week number and year
-     */
-    public static getWeekNumber(dDate: Date): WeekInfo {
-        // Copy date so don't modify original
-        const d = new Date(+dDate);
-        d.setHours(0, 0, 0, 0);
-        // Set to nearest Thursday: current date + 4 - current day number
-        // Make Sunday's day number 7
-        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-        // Get first day of year
-        const yearStart = new Date(d.getFullYear(), 0, 1);
-        // Calculate full weeks to nearest Thursday
-        const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-        // Return week info
-        return {week: weekNo, year: yearStart.getFullYear()};
-    }
-
-
-    /**
-     * Gets the start date (Monday) of a specific week in a year.
-     * @param weekOrWeekInfo - WeekInfo object, Week instance, or week number
-     * @param year - Year (optional if providing WeekInfo or Week instance)
-     * @returns Date object representing the Monday at the start of the week
-     */
-    public static getWeekStartDate(weekOrWeekInfo: WeekInfo | Week | number, year?: number): Date {
-        let week: number;
-        let yearNum: number;
-        if (typeof weekOrWeekInfo === 'number' && typeof year === 'number') {
-            week = weekOrWeekInfo;
-            yearNum = year;
-        } else if (weekOrWeekInfo instanceof Week) {
-            week = weekOrWeekInfo.value;
-            yearNum = weekOrWeekInfo.year;
-        } else if (typeof weekOrWeekInfo === 'object' && weekOrWeekInfo !== null && 'week' in weekOrWeekInfo && 'year' in weekOrWeekInfo) {
-            week = weekOrWeekInfo.week;
-            yearNum = weekOrWeekInfo.year;
-        } else {
-            throw new Error('Invalid arguments: must provide either WeekInfo object, Week instance, or week number and year');
-        }
-        const date = new Date(yearNum, 0, 1);
-        const dayNum = date.getDay() || 7;
-        let dayDelta = (week - 1) * 7;
-        // If 1 Jan is Friday to Sunday, go to next week
-        if (dayNum > 4) {
-            dayDelta += 7;
-        }
-        // Add required number of days
-        date.setDate(1 - dayNum + (dayDelta + 1));
-        return date;
-
-    }
-
     public static from(week: number | string | Date | Week): Week {
         if (week instanceof Week) {
             return week;
@@ -186,13 +108,76 @@ export class Week {
     }
 
     /**
-     * Creates a Week object representing the previous week.
-     * @param value - Week number, date string, Date object, or Week object
-     * @returns Week object for the previous week
+     * Gets the ISO week number for a given date.
+     * @param dDate - The date to get week number for
+     * @returns WeekInfo object containing week number and year
      */
-    public static prev(value: number | string | Date | Week): Week {
-        const week = (value instanceof Week) ? value : Week.from(value);
-        return week.prev();
+    public static getWeekNumber(dDate: Date): WeekInfo {
+        // Copy date so don't modify original
+        const d = new Date(+dDate);
+        d.setHours(0, 0, 0, 0);
+        // Set to nearest Thursday: current date + 4 - current day number
+        // Make Sunday's day number 7
+        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+        // Get first day of year
+        const yearStart = new Date(d.getFullYear(), 0, 1);
+        // Calculate full weeks to nearest Thursday
+        const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+        // Return week info
+        return {week: weekNo, year: yearStart.getFullYear()};
+    }
+
+    /**
+     * Gets the start date (Monday) of a specific week in a year.
+     * @param weekOrWeekInfo - WeekInfo object, Week instance, or week number
+     * @param year - Year (optional if providing WeekInfo or Week instance)
+     * @returns Date object representing the Monday at the start of the week
+     */
+    public static getWeekStartDate(weekOrWeekInfo: WeekInfo | Week | number, year?: number): Date {
+        let week: number;
+        let yearNum: number;
+        if (typeof weekOrWeekInfo === 'number' && typeof year === 'number') {
+            week = weekOrWeekInfo;
+            yearNum = year;
+        } else if (weekOrWeekInfo instanceof Week) {
+            week = weekOrWeekInfo.value;
+            yearNum = weekOrWeekInfo.year;
+        } else if (typeof weekOrWeekInfo === 'object' && weekOrWeekInfo !== null && 'week' in weekOrWeekInfo && 'year' in weekOrWeekInfo) {
+            week = weekOrWeekInfo.week;
+            yearNum = weekOrWeekInfo.year;
+        } else {
+            throw new Error('Invalid arguments: must provide either WeekInfo object, Week instance, or week number and year');
+        }
+        const date = new Date(yearNum, 0, 1);
+        const dayNum = date.getDay() || 7;
+        let dayDelta = (week - 1) * 7;
+        // If 1 Jan is Friday to Sunday, go to next week
+        if (dayNum > 4) {
+            dayDelta += 7;
+        }
+        // Add required number of days
+        date.setDate(1 - dayNum + (dayDelta + 1));
+        return date;
+    }
+
+    /**
+     * Gets the last date of this week (Sunday) at 23:59:59.999.
+     */
+    public get LastDate(): Date {
+        if (!this._lastDate) {
+            this._lastDate = new Date(+this.FirstDate);
+            this._lastDate.setDate(this._lastDate.getDate() + 6);
+            this._lastDate.setHours(23, 59, 59, 999);
+        }
+        return this._lastDate;
+    }
+
+    /**
+     * Gets the next week.
+     * @returns Week object for the week after this one
+     */
+    public next(): Week {
+        return Week.from(new Date(+this.FirstDate + Week.MS_IN_WEEK));
     }
 
     /**
@@ -214,11 +199,13 @@ export class Week {
     }
 
     /**
-     * Gets the next week.
-     * @returns Week object for the week after this one
+     * Creates a Week object representing the previous week.
+     * @param value - Week number, date string, Date object, or Week object
+     * @returns Week object for the previous week
      */
-    public next(): Week {
-        return Week.from(new Date(+this.FirstDate + Week.MS_IN_WEEK));
+    public static prev(value: number | string | Date | Week): Week {
+        const week = (value instanceof Week) ? value : Week.from(value);
+        return week.prev();
     }
 
     /**
