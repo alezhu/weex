@@ -6,6 +6,7 @@ export default defineConfig({
         environment: 'node',
         coverage: {
             include: ['src/week.ts'],
+            reporter: ['text', 'json', 'html', 'json-summary'],
         },
     },
 })

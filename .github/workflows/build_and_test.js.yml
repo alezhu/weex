@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -60,8 +60,33 @@ jobs:
       - name: Test
         run: pnpm run test:ci
 
-      - name: Upload coverage to Codecov
-        if: ${{ matrix.node-version == '22.x' }}
-        uses: codecov/codecov-action@v5
+      - name: Generate Coverage Badge JSON
+        if: ${{ matrix.node-version == '22.x' && github.ref == 'refs/heads/main' }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            const summary = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json'));
+            const pct = summary.total.lines.pct;
+            let color = 'red';
+            if (pct >= 90) color = 'brightgreen';
+            else if (pct >= 80) color = 'green';
+            else if (pct >= 70) color = 'yellowgreen';
+            else if (pct >= 60) color = 'yellow';
+            else if (pct >= 50) color = 'orange';
+            const badgeData = {
+              schemaVersion: 1,
+              label: 'coverage',
+              message: pct + '%',
+              color: color
+            };
+            fs.mkdirSync('./.github/badges', { recursive: true });
+            fs.writeFileSync('./.github/badges/coverage.json', JSON.stringify(badgeData, null, 2));
+          "
+
+      - name: Update Coverage Badge in badges branch
+        if: ${{ matrix.node-version == '22.x' && github.ref == 'refs/heads/main' }}
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./.github/badges
+          publish_branch: badges
