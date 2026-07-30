@@ -4,7 +4,7 @@
   "description": "npm package for getting week info",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/types/index.d.ts",
-  "module": "./dist/esm/wrapper.mjs",
+  "module": "./dist/esm/index.js",
   "files": [
     "dist/**/*"
   ],
@@ -13,7 +13,7 @@
     ".": {
       "import": {
         "types": "./dist/esm/types/index.d.ts",
-        "default": "./dist/esm/wrapper.mjs"
+        "default": "./dist/esm/index.js"
       },
       "require": {
         "types": "./dist/cjs/types/index.d.ts",
@@ -27,7 +27,7 @@
     "test:run": "vitest run",
     "test:ci": "vitest --coverage",
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p ./tsconfig.esm.json && copyfiles --flat src/wrapper.mjs dist/esm && echo {\"type\": \"module\"} > dist/esm/package.json",
+    "build:esm": "tsc -p ./tsconfig.esm.json && echo {\"type\": \"module\"} > dist/esm/package.json",
     "build:cjs": "tsc -p ./tsconfig.cjs.json && echo {\"type\": \"commonjs\"} > dist/cjs/package.json",
     "prepublishOnly": "npm run build",
     "npmjs:deploy": "npm config set //registry.npmjs.org/:_authToken=<token> && npm publish --access public",
