@@ -57,6 +57,14 @@ export class Week {
     }
 
     /**
+     * Returns the current week for the current date.
+     * @returns Week instance for current date
+     */
+    public static current(): Week {
+        return Week.from(new Date());
+    }
+
+    /**
      * Checks if this week equals another week.
      * @param other - Week to compare
      * @returns True if both year and week number match
@@ -214,6 +222,15 @@ export class Week {
     }
 
     /**
+     * Gets the total number of ISO weeks in a given year (52 or 53).
+     * @param year - Year to check
+     * @returns Total number of weeks in the year (52 or 53)
+     */
+    public static getWeeksInYear(year: number): number {
+        return Week.getWeekNumber(new Date(year, 11, 28)).week;
+    }
+
+    /**
      * Checks if this week is after another week.
      * @param other - Week to compare against
      * @returns True if this week is after other
@@ -266,6 +283,14 @@ export class Week {
     public static next(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.next();
+    }
+
+    /**
+     * Returns the current week for the current date (alias for current).
+     * @returns Week instance for current date
+     */
+    public static now(): Week {
+        return Week.current();
     }
 
     /**
