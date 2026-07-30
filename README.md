@@ -77,9 +77,10 @@ Usage example:
 const week = new Week(1, 2020);
 ```
 
-### FirstDate
+### firstDate / FirstDate
 ```js
-get FirstDate():Date
+get firstDate(): Date
+get FirstDate(): Date
 ```
 
 Returns first date (Date) of week (monday). Time in returned date is 00:00:00.000
@@ -87,12 +88,13 @@ Returns first date (Date) of week (monday). Time in returned date is 00:00:00.00
 Usage example:
 ```js
 const week = new Week(1, 2020);
-const date = week.FirstDate;
+const date = week.firstDate; // 2019-12-30T00:00:00.000Z
 ```
 
-### LastDate
+### lastDate / LastDate
 ```js
-get LastDate():Date
+get lastDate(): Date
+get LastDate(): Date
 ```
 
 Returns last date (Date) of week (sunday). Time in returned date is 23:59:59.999
@@ -100,135 +102,154 @@ Returns last date (Date) of week (sunday). Time in returned date is 23:59:59.999
 Usage example:
 ```js
 const week = new Week(1, 2020);
-const date = week.LastDate;
+const date = week.lastDate; // 2020-01-05T23:59:59.999Z
 ```
 
-### prev
+### compareTo
 ```js
-prev():Week
+compareTo(other: Week): number
 ```
 
-Returns previous week
+Compares this week chronologically with another week. Returns negative if earlier, positive if later, 0 if equal.
 
 Usage example:
 ```js
-const week = Week.from('02-2020');
-const result = week.prev(); //=> 2020.01
+const w1 = new Week(10, 2023);
+const w2 = new Week(12, 2023);
+w1.compareTo(w2); //=> -2
 ```
 
-### next
+### contains
 ```js
-next():Week
+contains(date: Date): boolean
 ```
 
-Returns next week
+Checks if a given date falls within this week.
 
 Usage example:
 ```js
-const week = Week.from('02-2020');
-const result = week.next(); //=> 2020.03
+const week = new Week(1, 2024);
+week.contains(new Date(2024, 0, 3)); //=> true
 ```
+
+### equals
+```js
+equals(other: Week): boolean
+```
+
+Checks if this week equals another week.
+
+Usage example:
+```js
+w1.equals(w2); //=> false
+```
+
+### getDays
+```js
+getDays(): Date[]
+```
+
+Returns an array of all 7 dates (Monday through Sunday) for this week.
+
+Usage example:
+```js
+const days = week.getDays(); //=> [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+```
+
+### isBefore / isAfter
+```js
+isBefore(other: Week): boolean
+isAfter(other: Week): boolean
+```
+
+Checks if this week is strictly before or after another week.
+
+### prev / next
+```js
+prev(): Week
+next(): Week
+```
+
+Returns previous or next week instance.
+
+### toDateRange
+```js
+toDateRange(): { start: Date, end: Date }
+```
+
+Returns the date range of the week (start Monday 00:00:00.000 to end Sunday 23:59:59.999).
+
+### toISOString
+```js
+toISOString(): string
+```
+
+Returns ISO 8601 week string representation (e.g. `"2024-W05"`).
 
 ### toString
 ```js
-toString():string;
+toString(): string
 ```
 
-Returns week string representation
+Returns week string representation in `"YYYY.WW"` format (e.g. `"2024.05"`).
 
-Usage example:
+### Week.current / Week.now
 ```js
-const week = Week.from('02-2020');
-const result = week.toString(); //=> 2020.01
+static current(): Week
+static now(): Week
 ```
 
-### Week.getWeekNumber
-```js
-static getWeekNumber(dDate:Date):WeekInfo
-```
-
-Returns WeekInfo object ``{week:int,year:int}`` for passed date
-
-Parameters:
-- dDate - Date object
-
-Usage example:
-```js
-const {week, year} = Week.getWeekNumber(new Date());
-```
-
-### Week.getWeekStartDate
-
-```js
-static getWeekStartDate(weekInfo:WeekInfo):Date
-static getWeekStartDate(week:int, year:int):Date
-```
-
-Returns week start date for week and year
-
-Parameters:
-- weekInfo - object WeekInfo-like ``{week:int,year:int}``
-
-or
-- week - week in year number (see [constructor](#constructor))
-- year - full year
-
-Usage example:
-```js
-const date = Week.getWeekStartDate(1, 2023);
-```
+Returns Week instance for the current date.
 
 ### Week.from
 ```js
-static from(week: string | Date): Week
+static from(week: number | string | Date | Week): Week
 ```
 
-Returns Week instance fo passed date or week
+Returns Week instance for passed value.
 
 Parameters:
-- week
-    - If passed Date object, use it for detect week.
-    - If passed int value, use it as week number of current year
-    - If passed string
-        - If string length <= 2, use it as week number of current year
-        - else try parse the string as WWdYYYY or YYYYdWW template where
-            - W and Y digit
-            - d - any non digit character, for example "-" or "." or "/" etc
+- `week`
+  - If passed `Week` instance, returns it directly.
+  - If passed `Date` object, detects ISO week number.
+  - If passed `number`, treats as week number of current year.
+  - If passed `string`:
+    - Parsed as week number, `"YYYY-WW"`, `"YYYY-Www"`, `"Www.YYYY"`, or `"WW-YYYY"`.
 
 Usage example:
 ```js
 const currentWeek = Week.from(new Date());
 const week35 = Week.from(35);
-const week3555 = Week.from('35');
-const week55 = Week.from('2020-35');
-const week = Week.from('10.2023');
+const weekIso = Week.from('2024-W05');
+const weekCustom = Week.from('W22.2019');
 ```
 
-### Week.prev
+### Week.getWeekNumber
 ```js
-static prev(value : number | string | Date | Week ):Week
+static getWeekNumber(dDate: Date): WeekInfo
 ```
 
-Returns previous week for passed week
-Parameters:
-- week - week value for which need previous value (see [Week.from](#Week.from))
+Returns `WeekInfo` object `{week: int, year: int}` for passed date.
 
-Usage example:
+### Week.getWeeksInYear
 ```js
-const result = Week.prev('02-2020');//=> 01.2020
+static getWeeksInYear(year: number): number
 ```
 
-### Week.next
-```js 
-static next(value:number | string | Date | Week):Week
-```
+Returns total number of ISO weeks in a given year (52 or 53).
 
-Returns next week for passed week
-Parameters:
-- week - week value for which need next value (see [Week.from](#Week.from))
-
-Usage example:
+### Week.getWeekStartDate
 ```js
-const result = Week.next('02-2020');//=> 03.2020
+static getWeekStartDate(weekOrWeekInfo: WeekInfo | Week | number, year?: number): Date
 ```
+
+Returns week start date (Monday 00:00:00.000) for specified week.
+
+### Week.prev / Week.next
+```js
+static prev(value: number | string | Date | Week): Week
+static next(value: number | string | Date | Week): Week
+```
+
+Returns previous or next week for passed week value.
 
