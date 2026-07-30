@@ -99,17 +99,20 @@ export class Week {
      * @param year - Year (optional if providing WeekInfo or Week instance)
      * @returns Date object representing the Monday at the start of the week
      */
-    public static getWeekStartDate(weekOrWeekInfo: WeekInfo | number, year?: number): Date {
+    public static getWeekStartDate(weekOrWeekInfo: WeekInfo | Week | number, year?: number): Date {
         let week: number;
         let yearNum: number;
         if (typeof weekOrWeekInfo === 'number' && typeof year === 'number') {
             week = weekOrWeekInfo;
             yearNum = year;
+        } else if (weekOrWeekInfo instanceof Week) {
+            week = weekOrWeekInfo.value;
+            yearNum = weekOrWeekInfo.year;
         } else if (typeof weekOrWeekInfo === 'object' && weekOrWeekInfo !== null && 'week' in weekOrWeekInfo && 'year' in weekOrWeekInfo) {
             week = weekOrWeekInfo.week;
             yearNum = weekOrWeekInfo.year;
         } else {
-            throw new Error('Invalid arguments: must provide either WeekInfo object or week number and year');
+            throw new Error('Invalid arguments: must provide either WeekInfo object, Week instance, or week number and year');
         }
         const date = new Date(yearNum, 0, 1);
         const dayNum = date.getDay() || 7;
@@ -124,7 +127,11 @@ export class Week {
 
     }
 
-    public static from(week: number | string | Date): Week {
+    public static from(week: number | string | Date | Week): Week {
+        if (week instanceof Week) {
+            return week;
+        }
+
         if (week instanceof Date) {
             const weekInfo = Week.getWeekNumber(week);
             return new Week(weekInfo.week, weekInfo.year);

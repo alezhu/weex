@@ -86,6 +86,12 @@ describe('Week', () => {
             expect(result.value).toBe(22);
         });
 
+        it('should return same instance when passing Week object', function () {
+            const existing = new Week(10, 2023);
+            const result = Week.from(existing);
+            expect(result).toBe(existing);
+        });
+
         it('should return null for invalid argument', function () {
             expect(() => Week.from('W22.2019')).toThrow('Week number must be greater than 0');
         });
@@ -289,7 +295,13 @@ describe('Week', () => {
         it('should accept WeekInfo', () => {
             const result = Week.getWeekStartDate({week: 1, year: 2023});
             expect(result).toStrictEqual(new Date(2023, 0, 2));
-        })
+        });
+
+        it('should accept Week instance', () => {
+            const week = new Week(1, 2023);
+            const result = Week.getWeekStartDate(week);
+            expect(result).toStrictEqual(new Date(2023, 0, 2));
+        });
     })
 
     describe('toString', () => {
