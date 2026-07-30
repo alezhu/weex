@@ -35,7 +35,7 @@ export class Week {
     }
 
     /**
-     * Gets the first date of this week (Sunday).
+     * Gets the first date of this week (Monday).
      */
     public get FirstDate(): Date {
         if (!this._firstDate) {
@@ -45,7 +45,7 @@ export class Week {
     }
 
     /**
-     * Gets the last date of this week (Saturday) at 23:59:59.999.
+     * Gets the last date of this week (Sunday) at 23:59:59.999.
      */
     public get LastDate(): Date {
         if (!this._lastDate) {
@@ -94,10 +94,10 @@ export class Week {
 
 
     /**
-     * Gets the start date (Sunday) of a specific week in a year.
-     * @param weekOrWeekInfo - WeekInfo object or week number
-     * @param year - Year (optional if providing WeekInfo)
-     * @returns Date object representing the Sunday at the start of the week
+     * Gets the start date (Monday) of a specific week in a year.
+     * @param weekOrWeekInfo - WeekInfo object, Week instance, or week number
+     * @param year - Year (optional if providing WeekInfo or Week instance)
+     * @returns Date object representing the Monday at the start of the week
      */
     public static getWeekStartDate(weekOrWeekInfo: WeekInfo | number, year?: number): Date {
         let week: number;
