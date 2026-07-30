@@ -149,30 +149,34 @@ export class Week {
             if (trimmed.length <= 2 && /^\d{1,2}$/.test(trimmed)) {
                 weekNum = parseInt(trimmed, 10);
             } else {
-                // Try to parse as "week year" or "year week" format
-                const parts = trimmed.split(/\D+/);
+                // Try to parse as "week year", "year week", "W22.2019", "2024-W05" etc.
+                const parts = trimmed.split(/\D+/).filter(Boolean);
                 if (parts.length >= 2) {
                     const num1 = parseInt(parts[0], 10);
                     const num2 = parseInt(parts[1], 10);
 
                     if (parts[0].length === 4 && num1 >= 1000 && num1 <= 9999) {
-                        // Format: "2024 12" or "2024-12" (year week)
+                        // Format: "2024 12" or "2024-12" or "2024-W12" (year week)
                         yearNum = num1;
                         weekNum = num2;
                     } else if (parts[1].length === 4 && num2 >= 1000 && num2 <= 9999) {
-                        // Format: "12 2024" or "12-2024" (week year)
+                        // Format: "12 2024" or "12-2024" or "W12-2024" (week year)
                         weekNum = num1;
                         yearNum = num2;
                     } else {
-                        // Both are likely week numbers, use current year
+                        // Both are numbers, use first as week number and current year
                         weekNum = num1;
                     }
                 } else if (parts.length === 1) {
-                    // Single number, treat as week number
+                    // Single number (e.g. "W05" or "5")
                     weekNum = parseInt(parts[0], 10);
                 } else {
                     throw new Error(`Invalid week format: ${week}`);
                 }
+            }
+
+            if (isNaN(weekNum) || isNaN(yearNum)) {
+                throw new Error(`Invalid week format: ${week}`);
             }
         } else {
             throw new Error(`Invalid week type: ${typeof week}`);

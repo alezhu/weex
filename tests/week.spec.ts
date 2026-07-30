@@ -92,8 +92,19 @@ describe('Week', () => {
             expect(result).toBe(existing);
         });
 
-        it('should return null for invalid argument', function () {
-            expect(() => Week.from('W22.2019')).toThrow('Week number must be greater than 0');
+        it('should create from string with W-prefix like W22.2019 or 2024-W05', function () {
+            const res1 = Week.from('W22.2019');
+            expect(res1.year).toBe(2019);
+            expect(res1.value).toBe(22);
+
+            const res2 = Week.from('2024-W05');
+            expect(res2.year).toBe(2024);
+            expect(res2.value).toBe(5);
+        });
+
+        it('should throw error for invalid week format or type', function () {
+            expect(() => Week.from('abc')).toThrow('Invalid week format: abc');
+            expect(() => Week.from(true as any)).toThrow('Invalid week type: boolean');
         });
     })
 
@@ -140,7 +151,7 @@ describe('Week', () => {
         });
 
         it('should throw exception for invalid argument', function () {
-            expect(() => Week.prev('W22.2019')).toThrow("Week number must be greater than 0");
+            expect(() => Week.prev('abc')).toThrow('Invalid week format: abc');
         });
     })
 
