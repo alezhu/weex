@@ -1,6 +1,7 @@
 # @alezhu/weex
 ![GitHub package.json dynamic](https://img.shields.io/github/package-json/v/alezhu/weex)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/alezhu/weex/build_and_test.js.yml)
+![Codecov](https://img.shields.io/codecov/c/github/alezhu/weex)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/alezhu/weex)
 ![npm](https://img.shields.io/npm/dt/%40alezhu/weex)
 ![NPM](https://img.shields.io/npm/l/%40alezhu%2Fweex)
