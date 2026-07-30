@@ -83,6 +83,21 @@ export class Week {
     }
 
     /**
+     * Returns all 7 dates (Monday through Sunday) of this week.
+     * @returns Array of 7 Date objects
+     */
+    public getDays(): Date[] {
+        const days: Date[] = [];
+        const start = new Date(+this.FirstDate);
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(+start);
+            day.setDate(start.getDate() + i);
+            days.push(day);
+        }
+        return days;
+    }
+
+    /**
      * Creates a Week object from various input types.
      * @param week - Week number, date string, Date object, or Week object
      * @returns Week instance
@@ -269,6 +284,25 @@ export class Week {
     public static prev(value: number | string | Date | Week): Week {
         const week = (value instanceof Week) ? value : Week.from(value);
         return week.prev();
+    }
+
+    /**
+     * Returns the date range of this week (start Monday 00:00:00.000 to end Sunday 23:59:59.999).
+     * @returns Object containing start and end Date objects
+     */
+    public toDateRange(): { start: Date; end: Date } {
+        return {
+            start: new Date(+this.FirstDate),
+            end: new Date(+this.LastDate)
+        };
+    }
+
+    /**
+     * Returns the ISO 8601 string representation of the week in "YYYY-Www" format.
+     * @returns String in format "YYYY-Www" (e.g., "2024-W05")
+     */
+    public toISOString(): string {
+        return `${this.year.toString().padStart(4, '0')}-W${this.value.toString().padStart(2, '0')}`;
     }
 
     /**
