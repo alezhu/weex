@@ -35,6 +35,37 @@ export class Week {
     }
 
     /**
+     * Compares this week with another week.
+     * @param other - Week to compare against
+     * @returns Negative if earlier, positive if later, 0 if equal
+     */
+    public compareTo(other: Week): number {
+        if (this.year !== other.year) {
+            return this.year - other.year;
+        }
+        return this.value - other.value;
+    }
+
+    /**
+     * Checks if a given date falls within this week.
+     * @param date - Date to check
+     * @returns True if date is within week, false otherwise
+     */
+    public contains(date: Date): boolean {
+        const time = date.getTime();
+        return time >= this.FirstDate.getTime() && time <= this.LastDate.getTime();
+    }
+
+    /**
+     * Checks if this week equals another week.
+     * @param other - Week to compare
+     * @returns True if both year and week number match
+     */
+    public equals(other: Week): boolean {
+        return other instanceof Week && this.year === other.year && this.value === other.value;
+    }
+
+    /**
      * Gets the first date of this week (Monday).
      */
     public get firstDate(): Date {
@@ -165,6 +196,24 @@ export class Week {
         // Add required number of days
         date.setDate(1 - dayNum + (dayDelta + 1));
         return date;
+    }
+
+    /**
+     * Checks if this week is after another week.
+     * @param other - Week to compare against
+     * @returns True if this week is after other
+     */
+    public isAfter(other: Week): boolean {
+        return this.compareTo(other) > 0;
+    }
+
+    /**
+     * Checks if this week is before another week.
+     * @param other - Week to compare against
+     * @returns True if this week is before other
+     */
+    public isBefore(other: Week): boolean {
+        return this.compareTo(other) < 0;
     }
 
     /**
