@@ -49,7 +49,7 @@ jobs:
 
       - name: Setup pnpm
         if: github.event_name == 'workflow_dispatch' || steps.check-main-tests.outputs.skip_tests != 'true'
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11
 
@@ -112,7 +112,7 @@ jobs:
         shell: bash
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11
 
