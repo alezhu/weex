@@ -55,7 +55,7 @@ jobs:
 
       - name: Setup Node.js
         if: github.event_name == 'workflow_dispatch' || steps.check-main-tests.outputs.skip_tests != 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22.x
           cache: 'pnpm'
@@ -117,7 +117,7 @@ jobs:
           version: 11
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
