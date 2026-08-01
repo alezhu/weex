@@ -27,7 +27,7 @@ jobs:
       - name: Check if tests passed on main
         id: check-main-tests
         if: github.event_name == 'push'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const runs = await github.rest.actions.listWorkflowRunsForRepo({
