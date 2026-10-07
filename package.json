@@ -58,7 +58,7 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/coverage-v8": "^5.0.3",
     "@vitest/expect": "^5.0.0",
     "copyfiles": "^2.4.1",
     "del-cli": "^7.0.0",
