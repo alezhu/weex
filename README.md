@@ -1,7 +1,7 @@
 # @alezhu/weex
 ![GitHub package.json dynamic](https://img.shields.io/github/package-json/v/alezhu/weex)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/alezhu/weex/build_and_test.js.yml)
-![Coverage Status](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/alezhu/weex/badges/coverage.json)
+[![Coverage Status](https://coveralls.io/repos/github/alezhu/weex/badge.svg?branch=main)](https://coveralls.io/github/alezhu/weex?branch=main)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/alezhu/weex)
 ![npm](https://img.shields.io/npm/dt/%40alezhu/weex)
 ![NPM](https://img.shields.io/npm/l/%40alezhu%2Fweex)
